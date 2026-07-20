@@ -208,4 +208,4 @@ MIT © 2026 — Faça o que quiser.
   <sub>Feito para a comunidade Docker que cansou do Docker Desktop</sub>
 </p>
 
-----------------
+---
