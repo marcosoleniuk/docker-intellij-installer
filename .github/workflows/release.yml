@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build .exe
+        run: pyinstaller --onefile --clean --name "Instalador-Docker" main.py
+
+      - name: Gerar changelog
+        id: changelog
+        shell: bash
+        run: |
+          current_tag="${{ github.ref_name }}"
+          prev_tag=$(git tag --sort=-creatordate | grep -A1 "$current_tag" | tail -1)
+          if [ -z "$prev_tag" ] || [ "$prev_tag" = "$current_tag" ]; then
+            prev_tag=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "prev=$prev_tag" >> $GITHUB_OUTPUT
+          {
+            echo "CHANGELOG<<EOF"
+            git log --pretty=format:"- %s (%h)" "$prev_tag..HEAD"
+            echo
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Criar Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Instalador Docker ${{ github.ref_name }}"
+          body: |
+            ## 🚀 Instalador Docker + IntelliJ IDEA ${{ github.ref_name }}
+
+            Baixe o `Instalador-Docker.exe` e execute (duplo clique).
+
+            ### 📦 O que inclui
+            - Docker Engine (escolha entre +90 versões)
+            - Docker Compose (últimas releases do GitHub)
+            - Docker Buildx (plugin multi-plataforma)
+            - Configuração automática do IntelliJ IDEA
+
+            ### 📝 Mudanças
+            ${{ steps.changelog.outputs.CHANGELOG }}
+
+            ---
+            **Requer Windows 10+** · Execute como administrador
+          files: dist/Instalador-Docker.exe
+          draft: false
+          prerelease: false
