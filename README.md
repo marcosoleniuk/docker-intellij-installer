@@ -70,7 +70,7 @@ Se você só precisa do **Docker CLI** (docker, docker compose, docker buildx) p
 
 ### Opção 1: `.exe` prontinho (recomendado)
 
-1. Baixe o [`Instalador-Docker.exe`](https://github.com/seu-usuario/docker-intellij-installer/releases/latest) da página de Releases
+1. Baixe o [`Instalador-Docker.exe`](https://github.com/marcosoleniuk/docker-intellij-installer/releases/download/v1.0.0/Instalador-Docker.exe) da página de Releases
 2. Execute (duplo clique) — **pede UAC** (precisa admin)
 3. Escolha as versões nos menus interativos
 4. Pronto! `docker --version` já funciona
