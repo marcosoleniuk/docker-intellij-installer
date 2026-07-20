@@ -16,7 +16,6 @@ import glob
 import ctypes
 import sys
 import urllib.request
-import urllib.error
 import zipfile
 import re
 import json
@@ -24,12 +23,7 @@ import tempfile
 import traceback
 import time
 import threading
-from pathlib import Path
 from collections import defaultdict
-
-# ---------------------------------------------------------------------------
-# Cores ANSI (Windows 10+ build 16257+ suporta nativamente)
-# ---------------------------------------------------------------------------
 
 def _enable_vt100() -> None:
     """Habilita sequencias de escape ANSI no terminal Windows."""
@@ -78,16 +72,9 @@ DIM  = lambda t: c("dim", t)
 ICONS = {"ok": OK("✓"), "err": ERR("✗"), "warn": WARN("⚠"), "info": INFO("▶"),
          "gear": "⚙", "box": "📦", "ship": "🚀", "disk": "💾", "net": "🌐"}
 
-# ---------------------------------------------------------------------------
-# Constantes
-# ---------------------------------------------------------------------------
 DOCKER_STATIC_BASE = "https://download.docker.com/win/static/stable/x86_64/"
 DOCKER_COMPOSE_API = "https://api.github.com/repos/docker/compose/releases"
 DOCKER_BUILDX_API  = "https://api.github.com/repos/docker/buildx/releases"
-
-# ---------------------------------------------------------------------------
-# Helpers de sistema
-# ---------------------------------------------------------------------------
 
 def is_admin() -> bool:
     try:
@@ -111,10 +98,6 @@ def maximize_console() -> None:
                 ctypes.windll.user32.ShowWindow(hwnd, SW_MAXIMIZE)
         except Exception:
             pass
-
-# ---------------------------------------------------------------------------
-# Spinner animado para operacoes longas
-# ---------------------------------------------------------------------------
 
 class Spinner:
     """Spinner animado que roda em thread separada."""
@@ -148,10 +131,6 @@ class Spinner:
         else:
             print("\r" + " " * 60, end="\r")
 
-# ---------------------------------------------------------------------------
-# Headers e separadores estilizados
-# ---------------------------------------------------------------------------
-
 def _print_header(title: str, color: str = "magenta") -> None:
     w = 66
     top = c(color, "╔" + "═" * (w - 2) + "╗")
@@ -168,10 +147,6 @@ def _step_header(step: int, title: str) -> None:
 
 def _summary_line(label: str, value: str, icon: str = "  ") -> None:
     print(f"  {icon}  {label}: {c('green', value)}")
-
-# ---------------------------------------------------------------------------
-# Download com spinner + barra de progresso colorida
-# ---------------------------------------------------------------------------
 
 def download_file(url: str, dest: str, label: str = "") -> bool:
     """Baixa arquivo com barra de progresso colorida no terminal."""
@@ -210,10 +185,6 @@ def download_file(url: str, dest: str, label: str = "") -> bool:
         print(f"\n  {ICONS['err']}  {ERR(f'ERRO ao baixar: {e}')}")
         return False
 
-# ---------------------------------------------------------------------------
-# Parsing de versoes
-# ---------------------------------------------------------------------------
-
 def _semver_key(version_str: str) -> tuple:
     nums = re.findall(r'\d+', version_str)
     return tuple(int(n) for n in nums)
@@ -248,10 +219,6 @@ def _parse_docker_versions(html: str) -> list[dict]:
     unique.sort(key=lambda x: x["sort_key"])
     return unique
 
-# ---------------------------------------------------------------------------
-# Grid de colunas
-# ---------------------------------------------------------------------------
-
 def _print_columns(items: list[tuple[int, str]], cols: int = 5, cell_width: int = 28) -> None:
     rows = (len(items) + cols - 1) // cols
     for row in range(rows):
@@ -265,10 +232,6 @@ def _print_columns(items: list[tuple[int, str]], cols: int = 5, cell_width: int 
             else:
                 parts.append(" " * (cell_width + 11))
         print("".join(parts))
-
-# ---------------------------------------------------------------------------
-# Construcao de opcoes
-# ---------------------------------------------------------------------------
 
 def _build_version_options(html: str) -> list[dict]:
     all_versions = _parse_docker_versions(html)
@@ -301,10 +264,6 @@ def _build_version_options(html: str) -> list[dict]:
                 "version": v["version"],
             })
     return options
-
-# ---------------------------------------------------------------------------
-# Menus interativos
-# ---------------------------------------------------------------------------
 
 def _show_menu_bar() -> None:
     """Barra de atalhos do menu."""
@@ -390,10 +349,6 @@ def select_docker_version() -> str | None:
         q = '"'
         print(f"\n  {ICONS['warn']}  {WARN(f'Opcao invalida: {q}{choice}{q}')}")
         input("  Pressione ENTER para tentar novamente...")
-
-# ---------------------------------------------------------------------------
-# GitHub releases
-# ---------------------------------------------------------------------------
 
 def _fetch_github_releases(api_url: str, pages: int = 3) -> list[dict]:
     releases: list[dict] = []
@@ -509,10 +464,6 @@ def select_github_version(api_url: str, asset_pattern: str, label: str) -> tuple
         print(f"\n  {ICONS['warn']}  {WARN(f'Opcao invalida: {q}{choice}{q}')}")
         input("  Pressione ENTER para tentar novamente...")
 
-# ---------------------------------------------------------------------------
-# Download dos binarios
-# ---------------------------------------------------------------------------
-
 def download_docker_engine(dest_dir: str, version: str) -> bool:
     url = f"{DOCKER_STATIC_BASE}docker-{version}.zip"
     tmp_zip = os.path.join(tempfile.gettempdir(), f"docker-{version}.zip")
@@ -549,10 +500,6 @@ def download_github_asset_direct(download_url: str, dest_path: str, label: str) 
     ensure_dir(os.path.dirname(dest_path))
     return download_file(download_url, dest_path, label)
 
-# ---------------------------------------------------------------------------
-# IntelliJ
-# ---------------------------------------------------------------------------
-
 def find_intellij_directory(base_path: str) -> str | None:
     pattern = os.path.join(base_path, "JetBrains", "IntelliJIdea*")
     directories = glob.glob(pattern)
@@ -578,16 +525,11 @@ def install_intellij_configs(script_dir: str) -> None:
         else:
             print(f"  {ICONS['warn']}  {WARN(f'{src} nao encontrado')}")
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
 def _run_installer() -> None:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     docker_cli_dir = r"C:\Docker-CLI"
     docker_plugins_dir = os.path.expanduser(r"~\.docker\cli-plugins")
 
-    # ── 1. DOCKER ENGINE ──
     _step_header(1, "DOCKER ENGINE")
     engine_version = select_docker_version()
     if engine_version is None:
@@ -604,7 +546,6 @@ def _run_installer() -> None:
     print(f"\n  {ICONS['ok']}  {OK(f'Docker Engine {engine_version} instalado!')}")
     input(f"\n  Pressione ENTER para continuar...")
 
-    # ── 2. DOCKER COMPOSE ──
     _step_header(2, "DOCKER COMPOSE")
     compose_url, compose_tag = select_github_version(
         DOCKER_COMPOSE_API,
@@ -625,7 +566,6 @@ def _run_installer() -> None:
     else:
         print(f"\n  {DIM('Docker Compose: pulado pelo usuario.')}")
 
-    # ── 3. DOCKER BUILDX ──
     _step_header(3, "DOCKER BUILDX")
     buildx_url, buildx_tag = select_github_version(
         DOCKER_BUILDX_API,
@@ -646,12 +586,10 @@ def _run_installer() -> None:
     else:
         print(f"\n  {DIM('Docker Buildx: pulado pelo usuario.')}")
 
-    # ── 4. INTELLIJ ──
     clear_screen()
     _print_header(f"{ICONS['disk']}  CONFIGURANDO INTELLIJ IDEA", "blue")
     install_intellij_configs(script_dir)
 
-    # ── RESUMO ──
     clear_screen()
     _print_header(f"{ICONS['ship']}  INSTALACAO CONCLUIDA", "green")
     print(f"  {c('bold', 'Resumo da instalacao:')}\n")
