@@ -41,7 +41,7 @@ Se você só precisa do **Docker CLI** (docker, docker compose, docker buildx) p
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║   📦  DOCKER ENGINE - Escolha a Versão                       ║
+║  DOCKER ENGINE - Escolha a Versão                            ║
 ║  ══════════════════════════════════════════════════════════  ║
 ║                                                              ║
 ║  [ 0]  29.6.2  (45 MB)      ★ MAIS RECENTE ★                ║
