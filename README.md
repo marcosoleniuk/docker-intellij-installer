@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <b>🇧🇷 Interface 100% em português &nbsp;|&nbsp; ⚡ Download direto das fontes oficiais &nbsp;|&nbsp; 🎨 Colorido e animado</b>
+  <b>🇧🇷 Interface 100% em português &nbsp;|&nbsp; ⚡ Download direto das fontes oficiais</b>
 </p>
 
 ---
