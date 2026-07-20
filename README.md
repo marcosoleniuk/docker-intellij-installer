@@ -205,24 +205,7 @@ MIT © 2026 — Faça o que quiser.
 ---
 
 <p align="center">
-  <sub>Feito com ❤️ para a comunidade Docker que cansou do Docker Desktop</sub>
+  <sub>Feito para a comunidade Docker que cansou do Docker Desktop</sub>
 </p>
 
 ---
-
-## 📦 Como criar um release (automatizado)
-
-Todo push de **tag** dispara o GitHub Actions que gera o `.exe` e publica o release automaticamente:
-
-```powershell
-# 1. Commit suas mudanças
-git add . && git commit -m "feat: nova funcionalidade"
-
-# 2. Crie uma tag (seguindo semver)
-git tag v1.0.0
-
-# 3. Push + tag
-git push origin main --tags
-```
-
-> O workflow está em `.github/workflows/release.yml` — o `.exe` aparece em [Releases](https://github.com/seu-usuario/docker-intellij-installer/releases) ~2 minutos depois.
