@@ -41,18 +41,18 @@ Se você só precisa do **Docker CLI** (docker, docker compose, docker buildx) p
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║  📦  DOCKER ENGINE - Escolha a Versao                       ║
+║   📦  DOCKER ENGINE - Escolha a Versão                       ║
 ║  ══════════════════════════════════════════════════════════  ║
-║                                                             ║
-║  [ 0]  29.6.2  (45 MB)      ★ MAIS RECENTE ★               ║
-║                                                             ║
-║  [ 1]  29.6.1  (45 MB)   [14]  28.3.2  (41 MB)  ...        ║
-║  [ 2]  29.6.0  (45 MB)   [15]  28.3.1  (41 MB)             ║
-║  ...                                                        ║
-║                                                             ║
-║  [A] Atualizar  [S] Sair  [0] Mais recente                 ║
-║  ─────────────────────────────────────────────────────────  ║
-║  > 0                                                        ║
+║                                                              ║
+║  [ 0]  29.6.2  (45 MB)      ★ MAIS RECENTE ★                ║
+║                                                              ║
+║  [ 1]  29.6.1  (45 MB)   [14]  28.3.2  (41 MB)  ...          ║
+║  [ 2]  29.6.0  (45 MB)   [15]  28.3.1  (41 MB)               ║
+║  ...                                                         ║
+║                                                              ║
+║  [A] Atualizar  [S] Sair  [0] Mais recente                   ║
+║  ─────────────────────────────────────────────────────────   ║
+║  > 0                                                         ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
@@ -200,10 +200,10 @@ Abra uma issue antes de começar — assim alinhamos expectativas.
 
 ## 📜 Licença
 
-MIT © 2026 — Faça o que quiser, só não me processe.
+MIT © 2026 — Faça o que quiser.
 
 ---
 
 <p align="center">
-  <sub>Feito com ❤️ para a comunidade Docker que cansou do Docker Desktop</sub>
+  <sub>Feito para a comunidade Docker que cansou do Docker Desktop</sub>
 </p>
