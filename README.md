@@ -90,14 +90,9 @@ python main.py
 ## 📁 O que é instalado
 
 ```
-  ├── docker.exe            ← Docker Engine (do site oficial)
-  ├── dockerd.exe           ← Docker Daemon
-  ├── docker-proxy.exe      ← Proxy de rede
 %USERPROFILE%\.docker-cli\
   ├── docker.exe            ← Docker Engine (do site oficial)
   ├── dockerd.exe           ← Docker Daemon
-  ├── docker-proxy.exe      ← Proxy de rede
-  ├── containerd.exe        ← Container runtime
   └── docker-compose.exe    ← Docker Compose (do GitHub)
 
 %USERPROFILE%\.docker\cli-plugins\
