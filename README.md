@@ -78,7 +78,7 @@ Se você só precisa do **Docker CLI** (docker, docker compose, docker buildx) p
 ### Opção 2: Rodar via Python
 
 ```powershell
-git clone https://github.com/seu-usuario/docker-intellij-installer.git
+git clone https://github.com/marcosoleniuk/docker-intellij-installer.git
 cd docker-intellij-installer
 python main.py
 ```
