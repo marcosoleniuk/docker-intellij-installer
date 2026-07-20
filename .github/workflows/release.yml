@@ -1,20 +1,47 @@
-name: Release
+name: Auto Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - master
+      - main
 
 permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  release:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: windows-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calcular proxima versao
+        id: version
+        shell: bash
+        run: |
+          latest_tag=$(git tag --sort=-v:refname | head -1)
+          if [ -z "$latest_tag" ]; then
+            new_tag="v1.0.0"
+          else
+            IFS='.' read -r major minor patch <<< "${latest_tag#v}"
+            new_tag="v$major.$minor.$((patch + 1))"
+          fi
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+          echo "Versao: $new_tag"
+
+      - name: Criar tag
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "${{ steps.version.outputs.new_tag }}"
+          git push origin "${{ steps.version.outputs.new_tag }}"
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -31,12 +58,11 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          current_tag="${{ github.ref_name }}"
-          prev_tag=$(git tag --sort=-creatordate | grep -A1 "$current_tag" | tail -1)
+          current_tag="${{ steps.version.outputs.new_tag }}"
+          prev_tag=$(git tag --sort=-creatordate | grep -A1 "$current_tag" | tail -1 || echo "")
           if [ -z "$prev_tag" ] || [ "$prev_tag" = "$current_tag" ]; then
             prev_tag=$(git rev-list --max-parents=0 HEAD)
           fi
-          echo "prev=$prev_tag" >> $GITHUB_OUTPUT
           {
             echo "CHANGELOG<<EOF"
             git log --pretty=format:"- %s (%h)" "$prev_tag..HEAD"
@@ -47,23 +73,24 @@ jobs:
       - name: Criar Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Instalador Docker ${{ github.ref_name }}"
+          tag_name: ${{ steps.version.outputs.new_tag }}
+          name: "Instalador Docker ${{ steps.version.outputs.new_tag }}"
           body: |
-            ## 🚀 Instalador Docker + IntelliJ IDEA ${{ github.ref_name }}
+            ## 🚀 Instalador Docker + IntelliJ IDEA ${{ steps.version.outputs.new_tag }}
 
             Baixe o `Instalador-Docker.exe` e execute (duplo clique).
 
             ### 📦 O que inclui
-            - Docker Engine (escolha entre +90 versões)
-            - Docker Compose (últimas releases do GitHub)
+            - Docker Engine (escolha entre +90 versoes)
+            - Docker Compose (ultimas releases do GitHub)
             - Docker Buildx (plugin multi-plataforma)
-            - Configuração automática do IntelliJ IDEA
+            - Configuracao automatica do IntelliJ IDEA
 
-            ### 📝 Mudanças
+            ### 📝 Mudancas
             ${{ steps.changelog.outputs.CHANGELOG }}
 
             ---
-            **Requer Windows 10+** · Execute como administrador
+            **Requer Windows 10+**
           files: dist/Instalador-Docker.exe
           draft: false
           prerelease: false
