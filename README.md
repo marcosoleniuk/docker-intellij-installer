@@ -202,26 +202,4 @@ MIT © 2026 — Faça o que quiser.
   <sub>Feito para a comunidade Docker que cansou do Docker Desktop</sub>
 </p>
 
-## 📦 Releases automaticos
-
-Cada push na branch `master` dispara o GitHub Actions que:
-
-1. 🔢 **Auto-incrementa** a versao (patch: `v1.0.0 → v1.0.1 → v1.0.2 ...`)
-2. 🏷️ Cria a **tag** automaticamente
-3. ⚙️ Builda o `.exe` com PyInstaller
-4. 🚀 Publica o **release** com changelog gerado dos commits
-
-```mermaid
-flowchart LR
-    A[git push master] --> B[Actions: calcula versao]
-    B --> C[Cria tag vX.Y.Z]
-    C --> D[Build .exe]
-    D --> E[Release + changelog]
-```
-
-> Pra pular o release: inclua `[skip ci]` na mensagem do commit.
-
-
-<p align="center">
-  <sub>Feito para a comunidade Docker que cansou do Docker Desktop</sub>
-</p>
+---
