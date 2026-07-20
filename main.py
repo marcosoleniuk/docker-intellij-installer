@@ -507,27 +507,54 @@ def find_intellij_directory(base_path: str) -> str | None:
         return max(directories, key=os.path.getctime)
     return None
 
-def install_intellij_configs(script_dir: str) -> None:
+def install_intellij_configs(docker_cli_dir: str) -> None:
+    """Gera os XMLs de config do IntelliJ dinamicamente com os caminhos corretos."""
     appdata = os.getenv("APPDATA", "")
     intellij_dir = find_intellij_directory(appdata)
     if not intellij_dir:
         print(f"\n  {ICONS['warn']}  {WARN('IntelliJIdea nao encontrado.')}")
         print(f"  {DIM('As configs deverao ser copiadas manualmente.')}")
         return
+
     options_dir = os.path.join(intellij_dir, "options")
     ensure_dir(options_dir)
-    for fname in ("docker-tools.xml", "remote-servers.xml"):
-        src = os.path.join(script_dir, fname)
-        dst = os.path.join(options_dir, fname)
-        if os.path.exists(src):
-            shutil.copy(src, dst)
-            print(f"  {ICONS['ok']}  {fname} {DIM('→')} {c('cyan', dst)}")
-        else:
-            print(f"  {ICONS['warn']}  {WARN(f'{src} nao encontrado')}")
+    docker_exe = os.path.join(docker_cli_dir, "docker.exe")
+    compose_exe = os.path.join(docker_cli_dir, "docker-compose.exe")
+
+    # docker-tools.xml
+    tools_xml = f"""<application>
+  <component name="DockerSettings">
+    <option name="dockerComposePath" value="{compose_exe}" />
+    <option name="dockerPath" value="{docker_exe}" />
+  </component>
+</application>"""
+    tools_dst = os.path.join(options_dir, "docker-tools.xml")
+    with open(tools_dst, "w", encoding="utf-8") as f:
+        f.write(tools_xml)
+    print(f"  {ICONS['ok']}  docker-tools.xml {DIM('→')} {c('cyan', tools_dst)}")
+
+    # remote-servers.xml
+    remote_xml = f"""<application>
+  <component name="RemoteServers">
+    <remote-server name="Docker" type="docker">
+      <configuration>
+        <option name="apiUrl" value="npipe:////./pipe/docker_engine" />
+        <option name="autoDetectExePaths" value="false" />
+        <option name="certificatesPath" />
+        <option name="customConfiguratorId" value="DockerDefaultConnectionConfigurator" />
+        <option name="dockerComposeExePath" value="{compose_exe}" />
+        <option name="dockerExePath" value="{docker_exe}" />
+      </configuration>
+    </remote-server>
+  </component>
+</application>"""
+    remote_dst = os.path.join(options_dir, "remote-servers.xml")
+    with open(remote_dst, "w", encoding="utf-8") as f:
+        f.write(remote_xml)
+    print(f"  {ICONS['ok']}  remote-servers.xml {DIM('→')} {c('cyan', remote_dst)}")
 
 def _run_installer() -> None:
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    docker_cli_dir = r"C:\Docker-CLI"
+    docker_cli_dir = os.path.expanduser(r"~\.docker-cli")
     docker_plugins_dir = os.path.expanduser(r"~\.docker\cli-plugins")
 
     _step_header(1, "DOCKER ENGINE")
@@ -588,7 +615,7 @@ def _run_installer() -> None:
 
     clear_screen()
     _print_header(f"{ICONS['disk']}  CONFIGURANDO INTELLIJ IDEA", "blue")
-    install_intellij_configs(script_dir)
+    install_intellij_configs(docker_cli_dir)
 
     clear_screen()
     _print_header(f"{ICONS['ship']}  INSTALACAO CONCLUIDA", "green")

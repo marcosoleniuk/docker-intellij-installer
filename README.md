@@ -90,7 +90,10 @@ python main.py
 ## 📁 O que é instalado
 
 ```
-C:\Docker-CLI\
+  ├── docker.exe            ← Docker Engine (do site oficial)
+  ├── dockerd.exe           ← Docker Daemon
+  ├── docker-proxy.exe      ← Proxy de rede
+%USERPROFILE%\.docker-cli\
   ├── docker.exe            ← Docker Engine (do site oficial)
   ├── dockerd.exe           ← Docker Daemon
   ├── docker-proxy.exe      ← Proxy de rede
@@ -99,10 +102,6 @@ C:\Docker-CLI\
 
 %USERPROFILE%\.docker\cli-plugins\
   └── docker-buildx.exe     ← Docker Buildx (do GitHub)
-
-%APPDATA%\JetBrains\IntelliJIdea*\options\
-  ├── docker-tools.xml      ← Config do IntelliJ
-  └── remote-servers.xml    ← Conexão npipe
 ```
 
 ---

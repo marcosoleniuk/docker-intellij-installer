@@ -1,6 +1,10 @@
+<!--
+  Template - o instalador gera este arquivo dinamicamente
+  com o caminho absoluto correto para cada usuario.
+-->
 <application>
   <component name="DockerSettings">
-    <option name="dockerComposePath" value="C:\Docker-CLI\docker-compose.exe" />
-    <option name="dockerPath" value="C:\Docker-CLI\docker.exe" />
+    <option name="dockerComposePath" value="" />
+    <option name="dockerPath" value="" />
   </component>
 </application>

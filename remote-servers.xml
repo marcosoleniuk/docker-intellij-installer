@@ -1,3 +1,7 @@
+<!--
+  Template - o instalador gera este arquivo dinamicamente
+  com o caminho absoluto correto para cada usuario.
+-->
 <application>
   <component name="RemoteServers">
     <remote-server name="Docker" type="docker">
@@ -6,8 +10,8 @@
         <option name="autoDetectExePaths" value="false" />
         <option name="certificatesPath" />
         <option name="customConfiguratorId" value="DockerDefaultConnectionConfigurator" />
-        <option name="dockerComposeExePath" value="C:\Docker-CLI\docker-compose.exe" />
-        <option name="dockerExePath" value="C:\Docker-CLI\docker.exe" />
+        <option name="dockerComposeExePath" value="" />
+        <option name="dockerExePath" value="" />
       </configuration>
     </remote-server>
   </component>
